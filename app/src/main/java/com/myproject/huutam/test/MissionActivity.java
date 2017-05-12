@@ -67,10 +67,11 @@ public class MissionActivity extends AppCompatActivity {
                 if(arrayListShow.get(i).isLock()==true) {
                     Intent intentPlay = new Intent(MissionActivity.this, OpenImage.class);
                     intentPlay.putExtra("level", arrayListShow.get(i).getLevel());
+                    finish();
                     startActivity(intentPlay);
                 }
                 else{
-                    Toast.makeText(MissionActivity.this, "This level util unlock.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MissionActivity.this, "Coming soon...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -79,6 +80,7 @@ public class MissionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentMenu = new Intent(MissionActivity.this, MenuActivity.class);
+                finish();
                 startActivity(intentMenu);
             }
         });

@@ -30,6 +30,7 @@ public class OpenImage extends AppCompatActivity {
     int CHOOSE_IMAGE = 123;
     int TAKE_PHOTO = 321;
     int level = 0;
+    int FINISH_OPEN = 111;
 
     Bitmap bitmap;
 
@@ -58,6 +59,7 @@ public class OpenImage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intentMission = new Intent(OpenImage.this, MissionActivity.class);
                 intentMission.putExtra("openreturn", "openreturn");
+                finish();
                 startActivity(intentMission);
             }
         });
@@ -80,6 +82,7 @@ public class OpenImage extends AppCompatActivity {
                 Intent intent = new Intent(OpenImage.this, MainActivity.class);
                 intent.putExtra("level", level);
                 intent.putExtra("path", filename);
+                finish();
                 startActivity(intent);
             }
         });
@@ -134,6 +137,9 @@ public class OpenImage extends AppCompatActivity {
                     mediaScanIntent.setData(contentUri);
                     this.sendBroadcast(mediaScanIntent);
                 }
+            }
+            else if(requestCode == FINISH_OPEN){
+
             }
             super.onActivityResult(requestCode, resultCode, data);
         }

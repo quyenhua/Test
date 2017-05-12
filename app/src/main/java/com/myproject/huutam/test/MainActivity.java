@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
     private void setEvent() {
         imgbtRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which)
                     {
                         Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
+                        finish();
                         startActivity(intentHome);
                     }});
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -208,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         Intent intentReturn = new Intent(MainActivity.this, OpenImage.class);
                         intentReturn.putExtra("level", level);
+                        finish();
                         startActivity(intentReturn);
                     }});
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -225,11 +231,11 @@ public class MainActivity extends AppCompatActivity {
     private void complete() {
 //        completeLevel();
         ImageView imgStar1, imgStar2, imgStar3;
-        ImageButton imgNext, imgBackMenu;
+        ImageButton imgNext, imgBackMenu, imgReplay;
         Animation fadein;
 
         completeLevel();
-        Dialog dialog = new Dialog(MainActivity.this);
+        final Dialog dialog = new Dialog(MainActivity.this);
         dialog.setTitle("Complete Level");
         dialog.setContentView(R.layout.dialog_complete);
         imgStar1 = (ImageView) dialog.findViewById(R.id.imgStarOne);
@@ -237,20 +243,11 @@ public class MainActivity extends AppCompatActivity {
         imgStar3 = (ImageView) dialog.findViewById(R.id.imgStarThree);
         imgNext = (ImageButton) dialog.findViewById(R.id.imgNextLevel);
         imgBackMenu = (ImageButton) dialog.findViewById(R.id.imgReturnMenu);
+        imgReplay = (ImageButton) dialog.findViewById(R.id.imgReplay);
 
         fadein = AnimationUtils.loadAnimation(MainActivity.this, R.anim.anim_face_in);
         imgStar1.startAnimation(fadein);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         imgStar2.startAnimation(fadein);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         imgStar3.startAnimation(fadein);
         dialog.show();
 
@@ -259,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, OpenImage.class);
                 intent.putExtra("level", level + 1);
+                finish();
                 startActivity(intent);
             }
         });
@@ -267,7 +265,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intentMenu = new Intent(MainActivity.this, MenuActivity.class);
+                finish();
                 startActivity(intentMenu);
+            }
+        });
+
+        imgReplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                embroilGame(20);
+                dialog.cancel();
             }
         });
     }
