@@ -1,10 +1,12 @@
-package com.myproject.huutam.test;
+package com.myproject.huutam.test.dom;
 
 /**
  * Created by Quyen Hua on 3/17/2017.
  */
 
 import android.util.Log;
+
+import com.myproject.huutam.test.item.MissionItem;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

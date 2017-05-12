@@ -24,6 +24,7 @@
             android:fontFamily="sans-serif-smallcaps"
             android:text="1"
             android:textAlignment="center"
+            android:textColor="?attr/colorBackgroundFloating"
             android:textSize="30sp"
             android:textStyle="bold" />
 

@@ -1,4 +1,4 @@
-package com.myproject.huutam.test;
+package com.myproject.huutam.test.item;
 
 /**
  * Created by Quyen Hua on 5/8/2017.

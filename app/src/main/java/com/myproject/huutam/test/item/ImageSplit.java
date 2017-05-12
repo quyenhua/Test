@@ -1,4 +1,4 @@
-package com.myproject.huutam.test;
+package com.myproject.huutam.test.item;
 
 import android.widget.ImageView;
 
@@ -7,11 +7,11 @@ import android.widget.ImageView;
  */
 
 public class ImageSplit {
-    ImageView imgViewSmall;
-    int currentValue;
-    int realValue;
+    public ImageView imgViewSmall;
+    public int currentValue;
+    public int realValue;
    //int position[];
-    ImageSplit(){
+   public ImageSplit(){
         imgViewSmall = null;
         currentValue = 0;
         realValue = 0;

@@ -1,4 +1,4 @@
-package com.myproject.huutam.test;
+package com.myproject.huutam.test.adapter;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.myproject.huutam.test.R;
+import com.myproject.huutam.test.item.MissionItem;
 
 import java.util.List;
 

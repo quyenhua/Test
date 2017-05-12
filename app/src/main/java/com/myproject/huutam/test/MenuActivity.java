@@ -2,12 +2,15 @@ package com.myproject.huutam.test;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class MenuActivity extends Activity {
 
@@ -18,6 +21,11 @@ public class MenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         initialize();
+
+        if(fileExists(getBaseContext(), "level1.xml") == false){
+            imgContinue.setEnabled(false);
+        }
+
         setEvent();
     }
 
@@ -92,5 +100,13 @@ public class MenuActivity extends Activity {
         imgContinue = (ImageButton) findViewById(R.id.imgContinue);
         imgSetting = (ImageButton) findViewById(R.id.imgSetting);
         imgExit = (ImageButton) findViewById(R.id.imgExit);
+    }
+
+    public boolean fileExists(Context context, String filename) {
+        File file = context.getFileStreamPath(filename);
+        if(file == null || !file.exists()) {
+            return false;
+        }
+        return true;
     }
 }

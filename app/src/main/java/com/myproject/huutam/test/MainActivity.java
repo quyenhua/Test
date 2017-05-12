@@ -1,16 +1,15 @@
 package com.myproject.huutam.test;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,17 +17,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
+import com.myproject.huutam.test.dom.XMLDOMParser;
+import com.myproject.huutam.test.item.ImageSplit;
+import com.myproject.huutam.test.item.MissionItem;
+import com.myproject.huutam.test.item.Position;
+import com.myproject.huutam.test.item.StateGame;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Random;
 
 import static java.lang.StrictMath.abs;
@@ -37,12 +40,8 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout screen;
     ImageView imgView;
     MediaPlayer song;
-    ImageButton imgbtChooseImage;
-    ImageButton imgbtRefresh;
-    ImageButton imgbtAutoPlay;
-    ImageButton imgbtTakePhoto;
-    int CHOOSE_IMAGE = 123;
-    int TAKE_PHOTO = 321;
+    ImageButton imgbtRefresh, imgbtAutoPlay, imgBackOpen, imgBackHome;
+    TextView tvMission;
     Bitmap gameImage;
     private String pictureImagePath = "";
     XMLDOMParser parser = new XMLDOMParser();
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
     String fileName = "level";
     int level;
-    Bitmap bitmap;
     MissionItem missionLevel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,17 +59,26 @@ public class MainActivity extends AppCompatActivity {
         screen = (ConstraintLayout) findViewById(R.id.manhinh) ;
         imgView = (ImageView)findViewById(R.id.imageView);
         screen.setBackgroundResource(R.drawable.screen);
-        imgbtChooseImage = (ImageButton)findViewById(R.id.imgbtOpen);
-        imgbtTakePhoto = (ImageButton)findViewById(R.id.imgbtCamera);
         imgbtRefresh =(ImageButton)findViewById(R.id.imgbtRefresh);
         imgbtAutoPlay=(ImageButton)findViewById(R.id.imgbtAuto);
+        imgBackOpen = (ImageButton) findViewById(R.id.imgBackOpen);
+        imgBackHome = (ImageButton) findViewById(R.id.imgBackHome);
+        tvMission = (TextView) findViewById(R.id.tvMissionName);
 
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
             level = bundle.getInt("level");
-//            imgView.setImageBitmap(bitmap);
-            //Toast.makeText(this, level + "", Toast.LENGTH_SHORT).show();
+            String filename = bundle.getString("path");
+            try {
+                FileInputStream stream = openFileInput(filename);
+                gameImage = BitmapFactory.decodeStream(stream);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            imgView.setImageBitmap(gameImage);
         }
+
+        tvMission.setText("Mission " + level);
 
 /*Khởi tạo imageSplitList*/
         for(int i=0;i<4;i++){
@@ -112,20 +119,11 @@ public class MainActivity extends AppCompatActivity {
 //        song.setLooping(true);
 //        song.start();
 
-        imgbtChooseImage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                chooseImage();
-            }
-        });
+        setEvent();
 
-        imgbtTakePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePhoto();
-            }
-        });
+    }
 
+    private void setEvent() {
         imgbtRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,6 +171,55 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        imgBackHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("Quit Game");
+                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
+                        startActivity(intentHome);
+                    }});
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+            }
+        });
+
+        imgBackOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                alertDialog.setTitle("Quit Game");
+                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Intent intentReturn = new Intent(MainActivity.this, OpenImage.class);
+                        intentReturn.putExtra("level", level);
+                        startActivity(intentReturn);
+                    }});
+                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+            }
+        });
     }
 
     private void complete() {
@@ -193,15 +240,25 @@ public class MainActivity extends AppCompatActivity {
 
         fadein = AnimationUtils.loadAnimation(MainActivity.this, R.anim.anim_face_in);
         imgStar1.startAnimation(fadein);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         imgStar2.startAnimation(fadein);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         imgStar3.startAnimation(fadein);
         dialog.show();
 
         imgNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MissionActivity.class);
-                intent.putExtra("next", "next");
+                Intent intent = new Intent(MainActivity.this, OpenImage.class);
+                intent.putExtra("level", level + 1);
                 startActivity(intent);
             }
         });
@@ -350,57 +407,6 @@ public class MainActivity extends AppCompatActivity {
         imgSplitList[3][0].imgViewSmall.setBackgroundDrawable(null);
         imgSplitList[3][0].realValue=0;
         imgSplitList[3][0].currentValue=0;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode == RESULT_OK) {
-            if (requestCode == CHOOSE_IMAGE) {
-                try {
-                    Uri imageUri = data.getData();
-                    InputStream is = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    imgView.setImageBitmap(bitmap);
-                    //imgView.setImageURI(imageUri);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (requestCode == TAKE_PHOTO) {
-//                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//                imgView.setImageBitmap(bitmap);
-                  File imgFile = new  File(pictureImagePath);
-                  if(imgFile.exists()) {
-                      Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                      imgView.setImageBitmap(myBitmap);
-                      Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                      Uri contentUri = Uri.fromFile(imgFile);
-                      mediaScanIntent.setData(contentUri);
-                      this.sendBroadcast(mediaScanIntent);
-                  }
-            }
-            splitImage();
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    private void chooseImage(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, CHOOSE_IMAGE);
-    }
-
-    private void takePhoto(){
-//        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        startActivityForResult(intent, TAKE_PHOTO);
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = timeStamp + ".jpg";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
-        pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
-        File file = new File(pictureImagePath);
-        Uri outputFileUri = Uri.fromFile(file);
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-        startActivityForResult(cameraIntent, TAKE_PHOTO);
     }
 
     private void embroilGame(int number){

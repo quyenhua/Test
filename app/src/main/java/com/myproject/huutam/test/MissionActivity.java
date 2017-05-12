@@ -10,6 +10,10 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.myproject.huutam.test.adapter.CustomGridMission;
+import com.myproject.huutam.test.dom.XMLDOMParser;
+import com.myproject.huutam.test.item.MissionItem;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

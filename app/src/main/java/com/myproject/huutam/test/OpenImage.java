@@ -1,5 +1,6 @@
 package com.myproject.huutam.test;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,19 +56,31 @@ public class OpenImage extends AppCompatActivity {
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                Intent intentMission = new Intent(OpenImage.this, MissionActivity.class);
+                intentMission.putExtra("openreturn", "openreturn");
+                startActivity(intentMission);
             }
         });
 
         imgStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentStartGame = new Intent(OpenImage.this, MainActivity.class);
-                intentStartGame.putExtra("level", level);
-//                Drawable d = new BitmapDrawable(getResources(), bitmap);
-//                Toast.makeText(OpenImage.this, bitmap.toString(), Toast.LENGTH_SHORT).show();
-//                intentStartGame.putEx
-//                startActivity(intentStartGame);
+                String filename = "bitmap.png";
+                FileOutputStream stream = null;
+                try {
+                    stream = openFileOutput(filename, Context.MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    stream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Intent intent = new Intent(OpenImage.this, MainActivity.class);
+                intent.putExtra("level", level);
+                intent.putExtra("path", filename);
+                startActivity(intent);
             }
         });
 

@@ -1,14 +1,14 @@
-package com.myproject.huutam.test;
+package com.myproject.huutam.test.item;
 
 /**
  * Created by huutam on 04/05/2017.
  */
 
 public class StateGame {
-    int [][] state;
-    int idState;
-    int parentState;
-    Position position;
+    public int [][] state;
+    public int idState;
+    public int parentState;
+    public Position position;
 
     public StateGame(int [][] state, int idState, int parentState, Position position) {
         this.state = state;
