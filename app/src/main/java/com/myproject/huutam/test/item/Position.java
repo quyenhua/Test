@@ -5,10 +5,27 @@ package com.myproject.huutam.test.item;
  */
 
 public class Position {
-    public int X;
-    public int Y;
-    public Position(int x, int y){
-        X=x;
-        Y=y;
+    private int X;
+    private int Y;
+
+    public Position(int X, int Y) {
+        this.X = X;
+        this.Y = Y;
+    }
+
+    public int getX() {
+        return X;
+    }
+
+    public int getY() {
+        return Y;
+    }
+
+    public void setX(int x) {
+        X = x;
+    }
+
+    public void setY(int y) {
+        Y = y;
     }
 }
