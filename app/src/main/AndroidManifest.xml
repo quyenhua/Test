@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".MenuActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MissionActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MenuActivity" />
         <activity android:name=".OpenImage"/>
     </application>
 

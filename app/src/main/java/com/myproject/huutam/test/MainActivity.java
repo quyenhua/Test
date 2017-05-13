@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.myproject.huutam.test.item.ImageSplit;
 import com.myproject.huutam.test.item.Position;
@@ -18,21 +17,22 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    RelativeLayout screen;
+    //RelativeLayout screen;
     ImageView imgView;
     ImageButton imgbtRefresh;
     ImageButton imgbtAutoPlay;
     Bitmap gameImage;
     Bitmap bitmapList[][] = new Bitmap[4][4];
     ImageSplit imgSplitList[][] = new ImageSplit[4][4];
+    boolean checkAutoPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        screen = (RelativeLayout) findViewById(R.id.manhinh);
+        //screen = (RelativeLayout) findViewById(R.id.manhinh);
         imgView = (ImageView) findViewById(R.id.imageView);
-        screen.setBackgroundResource(R.drawable.screen);
+        //screen.setBackgroundResource(R.drawable.screen);
         imgbtRefresh = (ImageButton) findViewById(R.id.imgbtRefresh);
         imgbtAutoPlay = (ImageButton) findViewById(R.id.imgbtAuto);
 
@@ -74,43 +74,47 @@ public class MainActivity extends AppCompatActivity {
         imgbtRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                embroilGame(20);
+                if(checkAutoPlaying == false){
+                    embroilGame(20);
+                }
             }
         });
 
         imgbtAutoPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final int[][] startState = new int[4][4];
-                final int[][] goalState = new int[4][4];
-                final ArrayList<StateGameAuto> stateGameList = new ArrayList<>();
+                if(checkAutoPlaying == false) {
+                    checkAutoPlaying = true;
+                    final int[][] startState = new int[4][4];
+                    final int[][] goalState = new int[4][4];
+                    final ArrayList<StateGameAuto> stateGameList = new ArrayList<>();
 
-                startState[3][0] = imgSplitList[3][0].currentValue;
-                goalState[3][0] = imgSplitList[3][0].realValue;
-                StateGameAuto startGame;
-                Position position = new Position(0, 0);
-                if (imgSplitList[3][0].currentValue == 0) {
-                    position.setX(3);
-                    position.setY(0);
-                }
-                else {
-                    for (int i = 0; i < 4; i++) {
-                        for (int j = 0; j < 3; j++) {
-                            startState[i][j + 1] = imgSplitList[i][j + 1].currentValue;
-                            if (imgSplitList[i][j + 1].currentValue == 0) {
-                                position.setX(i);
-                                position.setY(j+1);
+                    startState[3][0] = imgSplitList[3][0].currentValue;
+                    goalState[3][0] = imgSplitList[3][0].realValue;
+                    StateGameAuto startGame;
+                    Position position = new Position(0, 0);
+                    if (imgSplitList[3][0].currentValue == 0) {
+                        position.setX(3);
+                        position.setY(0);
+                    } else {
+                        for (int i = 0; i < 4; i++) {
+                            for (int j = 0; j < 3; j++) {
+                                startState[i][j + 1] = imgSplitList[i][j + 1].currentValue;
+                                if (imgSplitList[i][j + 1].currentValue == 0) {
+                                    position.setX(i);
+                                    position.setY(j + 1);
+                                }
+                                goalState[i][j + 1] = imgSplitList[i][j + 1].realValue;
                             }
-                            goalState[i][j + 1] = imgSplitList[i][j + 1].realValue;
                         }
                     }
-                }
 
-                startGame = new StateGameAuto(startState, position);
-                stateGameList.add(startGame);
-                GamePlayAuto autoPlayVar = new GamePlayAuto(imgSplitList,goalState,stateGameList);
-                ArrayList<StateGameAuto> stateGameAutos = autoPlayVar.GetRightStateGameList();
-                autoPlay(stateGameAutos);
+                    startGame = new StateGameAuto(startState, position);
+                    stateGameList.add(startGame);
+                    GamePlayAuto autoPlayVar = new GamePlayAuto(imgSplitList, goalState, stateGameList);
+                    ArrayList<StateGameAuto> stateGameAutos = autoPlayVar.GetRightStateGameList();
+                    autoPlay(stateGameAutos);
+                }
 
             }
         });
@@ -302,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                checkAutoPlaying =false;
             }
         };
         thread.start();
