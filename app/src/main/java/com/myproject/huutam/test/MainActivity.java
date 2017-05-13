@@ -96,18 +96,19 @@ public class MainActivity extends AppCompatActivity {
                     if (imgSplitList[3][0].currentValue == 0) {
                         position.setX(3);
                         position.setY(0);
-                    } else {
-                        for (int i = 0; i < 4; i++) {
-                            for (int j = 0; j < 3; j++) {
-                                startState[i][j + 1] = imgSplitList[i][j + 1].currentValue;
-                                if (imgSplitList[i][j + 1].currentValue == 0) {
-                                    position.setX(i);
-                                    position.setY(j + 1);
-                                }
-                                goalState[i][j + 1] = imgSplitList[i][j + 1].realValue;
+                    }
+
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            startState[i][j + 1] = imgSplitList[i][j + 1].currentValue;
+                            if (imgSplitList[i][j + 1].currentValue == 0) {
+                                position.setX(i);
+                                position.setY(j + 1);
                             }
+                            goalState[i][j + 1] = imgSplitList[i][j + 1].realValue;
                         }
                     }
+
 
                     startGame = new StateGameAuto(startState, position);
                     stateGameList.add(startGame);

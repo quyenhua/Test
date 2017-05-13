@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".MissionActivity" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".OpenImage"/>
+        <activity android:name=".OpenImage" />
+        <activity android:name=".MainGameType2"></activity>
     </application>
 
 </manifest>

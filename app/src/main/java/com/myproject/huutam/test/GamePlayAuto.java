@@ -614,8 +614,12 @@ public class GamePlayAuto {
                 }
                 else {
                     if(positionSet.getY() == 2 && m==2){
-                        if(this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY() - 1] ==
-                                imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue) {
+                        if((this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY() - 1] ==
+                                imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue) ||
+                                (this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY()] ==
+                                        imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue &&
+                                        (this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY() - 1] ==0 ||
+                                                this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY() - 2] ==0))) {
                             positionDisableLists = new ArrayList<>();
                             this.stateGameList = MoveToFinishLeft(MoveToFinishTop(this.stateGameList,positionDisableLists, positionSet, new Position(positionSet.getX(), positionSet.getY() + 1)),
                                     positionDisableLists,positionSet, new Position(positionSet.getX(), positionSet.getY() + 1));
