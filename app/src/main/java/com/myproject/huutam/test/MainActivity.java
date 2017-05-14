@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //screen = (RelativeLayout) findViewById(R.id.manhinh);
-        imgView = (ImageView) findViewById(R.id.imageView);
+        imgView = (ImageView) findViewById(R.id.imgViewPrevious_45);
         //screen.setBackgroundResource(R.drawable.screen);
-        imgbtRefresh = (ImageButton) findViewById(R.id.imgbtRefresh);
-        imgbtAutoPlay = (ImageButton) findViewById(R.id.imgbtAuto);
+        imgbtRefresh = (ImageButton) findViewById(R.id.imgbtRefresh_45);
+        imgbtAutoPlay = (ImageButton) findViewById(R.id.imgbtAuto_45);
 
 /*Khởi tạo imageSplitList*/
         for (int i = 0; i < 4; i++) {
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             for (int j = 0; j < 3; j++) {
                 k++;
                 imgSplitList[i][j + 1].currentValue = k;
-                imgSplitList[j][j + 1].realValue = k;
+                imgSplitList[i][j + 1].realValue = k;
             }
         }
         imgSplitList[3][0].currentValue = 0;

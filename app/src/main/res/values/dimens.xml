@@ -5,4 +5,7 @@
     <dimen name="activity_main_width">290dp</dimen>
     <dimen name="activity_main_image">70dp</dimen>
     <dimen name="activity_main_image_tool">210dp</dimen>
+    <dimen name="activity_main_image_45">56dp</dimen>
+    <dimen name="activity_main_width_45">290dp</dimen>
+    <dimen name="activity_main_image_tool_45">224dp</dimen>
 </resources>

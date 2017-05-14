@@ -654,7 +654,8 @@ public class GamePlayAuto {
                             if(positionSet.getX() == numOfRow -3){
                                 if(imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue == stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 2]
                                         ||(imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue == stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 1]
-                                        && stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 2] == 0)){
+                                        && (this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 2][positionSet.getY() - 2] ==0 ||
+                                        this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 2][positionSet.getY() - 3] ==0))){
                                     Position savePositionDisable0 = new Position(positionDisableLists.get(positionDisableLists.size()-2).getX(),
                                             positionDisableLists.get(positionDisableLists.size()-2).getY());
                                     positionDisableLists.set(positionDisableLists.size()-2, new Position(0,0));
@@ -679,7 +680,8 @@ public class GamePlayAuto {
                             if(positionSet.getX() == numOfRow -3){
                                 if(imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue == stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 2]
                                         ||(imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue == stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 1]
-                                    && stateGameList.get(stateGameList.size()-1).getState()[positionSet.getX()+2][positionSet.getY() - 2] == 0)){
+                                    && (this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 2][positionSet.getY() - 2] ==0 ||
+                                        this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 2][positionSet.getY() - 3] ==0))){
                                     Position savePositionDisable0 = new Position(positionDisableLists.get(positionDisableLists.size()-2).getX(),
                                             positionDisableLists.get(positionDisableLists.size()-2).getY());
                                     positionDisableLists.set(positionDisableLists.size()-2, new Position(0,0));
