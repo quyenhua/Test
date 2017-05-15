@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.GestureDetector;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,7 +23,6 @@ import com.myproject.huutam.test.dom.XMLDOMParser;
 import com.myproject.huutam.test.item.ImageSplit;
 import com.myproject.huutam.test.item.MissionItem;
 import com.myproject.huutam.test.item.Position;
-import com.myproject.huutam.test.item.SoundPlayer;
 import com.myproject.huutam.test.item.StateGameAuto;
 
 import org.w3c.dom.Document;
@@ -51,16 +49,12 @@ public class MainGameType2 extends AppCompatActivity {
     ImageSplit imgSplitList[][] = new ImageSplit[5][5];
     boolean checkAutoPlaying = false;
     TextView tvMission, tvStep;
-    ImageView touchedImage;
     MissionItem missionCurrent;
-    SoundPlayer soundPlayer;
-    GestureDetector gestureDetector;
     String fileName = "level";
     int level;
     XMLDOMParser parser = new XMLDOMParser();
     ArrayList<StateGameAuto> stateGameAutos = new ArrayList<>();
     int count = 0;
-    int[][] saveStartState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +69,7 @@ public class MainGameType2 extends AppCompatActivity {
         imgBackOpen = (ImageButton) findViewById(R.id.imgBackOpen_45);
         imgBackHome = (ImageButton) findViewById(R.id.imgBackHome_45);
         tvMission = (TextView) findViewById(R.id.tvMissionName_45);
-        tvStep = (TextView) findViewById(R.id.tvStep);
+        tvStep = (TextView) findViewById(R.id.tvStep_45);
 
         Bundle bundle = getIntent().getExtras();
         if(bundle!=null){
@@ -249,7 +243,6 @@ public class MainGameType2 extends AppCompatActivity {
         startGame = new StateGameAuto(startState, position);
         stateGameList.add(startGame);
         GamePlayAuto autoPlayVar = new GamePlayAuto(imgSplitList, goalState, stateGameList);
-        stateGameAutos = autoPlayVar.GetRightStateGameList();
         return autoPlayVar.GetRightStateGameList();
     }
 

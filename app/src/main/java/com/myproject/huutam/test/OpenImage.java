@@ -85,6 +85,7 @@ public class OpenImage extends AppCompatActivity {
                 else{
                     intent = new Intent(OpenImage.this, MainGameType2.class);
                 }
+//                intent = new Intent(OpenImage.this, MainGameType2.class);
                 intent.putExtra("level", level);
                 intent.putExtra("path", filename);
                 finish();
