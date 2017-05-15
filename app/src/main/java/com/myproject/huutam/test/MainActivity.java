@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         splitImage();
         embroilGame(50*level);
         stateGameAutos = findListState();
-        setEvent();
         tvStep.setText("Your step: 0/" + stateGameAutos.size());
+        setEvent();
     }
 
     private ArrayList<StateGameAuto> findListState() {
@@ -164,8 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
 
-        saveStartState = startState;
-
         startGame = new StateGameAuto(startState, position);
         stateGameList.add(startGame);
         GamePlayAuto autoPlayVar = new GamePlayAuto(imgSplitList, goalState, stateGameList);
@@ -177,9 +175,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(checkAutoPlaying == false){
-//                    embroilGame(20);
+                    embroilGame(50 * level);
+                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    stateGameAutos = findListState();
                     count = 0;
-                    tvStep.setText("Your step: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your step: 0/" + stateGameAutos.size());
+//                    count = 0;
+//                    tvStep.setText("Your step: " + count + "/" + stateGameAutos.size());
 //                    for(int i = 0; i < 4; i++){
 //                        for(int j = 1; j < 4; j++){
 //                            imgSplitList[i][j].currentValue = saveStartState[i][j];
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
 //                    }
 //                    imgSplitList[3][0].currentValue = saveStartState[3][0];
 //                    splitImage();
-                    // đổi lại start game
+//                     đổi lại start game
                 }
             }
         });
@@ -197,6 +199,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                 if(checkAutoPlaying == false) {
                     checkAutoPlaying = true;
+                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    stateGameAutos = findListState();
                     autoPlay(stateGameAutos);
                 }
             }
@@ -212,9 +216,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
+//                        Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
+//                        finish();
+//                        startActivity(intentHome);
                         finish();
-                        startActivity(intentHome);
                     }});
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -330,6 +335,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 embroilGame(50*level);
+                count = 0;
                 dialog.cancel();
             }
         });

@@ -356,16 +356,17 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="23dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textColor="@android:color/background_dark"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/imgView"
-        app:layout_constraintVertical_bias="0.028"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.013"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtAuto" />
+        app:layout_constraintLeft_toRightOf="@+id/imgView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgbtAuto"
+        app:layout_constraintVertical_bias="0.028" />
 
 
 </android.support.constraint.ConstraintLayout>

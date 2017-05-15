@@ -87,8 +87,8 @@
 
     <ImageView
         android:id="@+id/imgShow"
-        android:layout_width="195dp"
-        android:layout_height="252dp"
+        android:layout_width="211dp"
+        android:layout_height="262dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -97,7 +97,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMission"
-        app:layout_constraintVertical_bias="0.226"
+        app:layout_constraintVertical_bias="0.222"
         app:layout_constraintHorizontal_bias="0.502" />
 
     <ImageButton

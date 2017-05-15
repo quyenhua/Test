@@ -78,8 +78,13 @@ public class OpenImage extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                Intent intent = new Intent(OpenImage.this, MainActivity.class);
+                Intent intent;
+                if(level < 4) {
+                    intent = new Intent(OpenImage.this, MainActivity.class);
+                }
+                else{
+                    intent = new Intent(OpenImage.this, MainGameType2.class);
+                }
                 intent.putExtra("level", level);
                 intent.putExtra("path", filename);
                 finish();
