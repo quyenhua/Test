@@ -557,7 +557,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 final int[] count = {0};
                 if(finalRightPath.size()-2==0){
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(500);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -578,7 +578,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 else {
                     while (count[0] < (finalRightPath.size() - 2)) {
                         try {
-                            Thread.sleep(50);
+                            Thread.sleep(500);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
