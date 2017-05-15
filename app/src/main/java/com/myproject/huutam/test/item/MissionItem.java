@@ -9,12 +9,21 @@ public class MissionItem {
     private boolean lock;
     private int imageStar;
     private int background;
+    private int bestStep = 0;
 
     public MissionItem(int level, boolean lock, int imageStar, int background) {
         this.level = level;
         this.lock = lock;
         this.imageStar = imageStar;
         this.background = background;
+    }
+
+    public MissionItem(int level, boolean lock, int imageStar, int background, int bestStep) {
+        this.level = level;
+        this.lock = lock;
+        this.imageStar = imageStar;
+        this.background = background;
+        this.bestStep = bestStep;
     }
 
     public int getLevel() {
@@ -47,5 +56,13 @@ public class MissionItem {
 
     public void setBackground(int background) {
         this.background = background;
+    }
+
+    public int getBestStep() {
+        return bestStep;
+    }
+
+    public void setBestStep(int bestStep) {
+        this.bestStep = bestStep;
     }
 }

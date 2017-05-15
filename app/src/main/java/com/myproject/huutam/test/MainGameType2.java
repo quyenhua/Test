@@ -34,7 +34,7 @@ public class MainGameType2 extends AppCompatActivity {
         imgView = (ImageView) findViewById(R.id.imgViewPrevious_45);
         //screen.setBackgroundResource(R.drawable.screen);
         imgbtRefresh = (ImageButton) findViewById(R.id.imgbtRefresh_45);
-        imgbtAutoPlay = (ImageButton) findViewById(R.id.imgbtAuto_45);
+        imgbtAutoPlay = (ImageButton) findViewById(R.id.imgbtAuto);
 
 /*Khởi tạo imageSplitList*/
         for (int i = 0; i < 5; i++) {

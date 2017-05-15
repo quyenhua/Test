@@ -130,8 +130,9 @@ public class XMLDOMParser {
                         "<lock>%s</lock>" +
                         "<star>%s</star>" +
                         "<background>%s</background>" +
+                        "<beststep>%s</beststep>" +
                         "</level>" +
                         "</record>";
-        return String.format(format, study.getLevel(), study.isLock() + "", study.getImageStar() + "", study.getBackground() + "");
+        return String.format(format, study.getLevel(), study.isLock() + "", study.getImageStar() + "", study.getBackground() + "", study.getBestStep() + "");
     }
 }

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,7 +27,13 @@ public class MenuActivity extends Activity {
             imgContinue.setEnabled(false);
         }
 
+        playMusic();
         setEvent();
+    }
+
+    private void playMusic() {
+        MediaPlayer song = MediaPlayer.create(MenuActivity.this, R.raw.alittlelove);
+        song.start();
     }
 
     private void setEvent() {

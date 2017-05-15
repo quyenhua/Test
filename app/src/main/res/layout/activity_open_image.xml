@@ -15,17 +15,17 @@
         android:layout_marginBottom="9dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:layout_toLeftOf="@+id/imgbtCamera"
         android:background="@null"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.311"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/open"
+        app:layout_constraintHorizontal_bias="0.282"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="8dp"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgShow"
-        app:layout_constraintVertical_bias="0.422" />
+        app:layout_constraintVertical_bias="0.535"
+        app:srcCompat="@drawable/open" />
 
     <ImageButton
         android:id="@+id/imgTakePhoto"
@@ -40,7 +40,7 @@
         android:background="@null"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.282"
+        app:layout_constraintHorizontal_bias="0.437"
         app:layout_constraintLeft_toRightOf="@+id/imgOpenImage"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imgOpenImage"
@@ -80,16 +80,15 @@
         android:textSize="40sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.063" />
+        app:layout_constraintVertical_bias="0.015" />
 
     <ImageView
         android:id="@+id/imgShow"
-        android:layout_width="170dp"
-        android:layout_height="230dp"
+        android:layout_width="195dp"
+        android:layout_height="252dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -98,21 +97,22 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvMission"
-        app:layout_constraintVertical_bias="0.174" />
+        app:layout_constraintVertical_bias="0.226"
+        app:layout_constraintHorizontal_bias="0.502" />
 
     <ImageButton
         android:id="@+id/imgStartGame"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/startgame"
-        app:layout_constraintTop_toTopOf="@+id/imgBackMission"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.002"
-        app:layout_constraintLeft_toRightOf="@+id/tvMission"
         android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.829" />
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/startgame"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.72"
+        app:layout_constraintLeft_toRightOf="@+id/tvMission"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgBackMission"
+        app:layout_constraintVertical_bias="0.002" />
 </android.support.constraint.ConstraintLayout>
