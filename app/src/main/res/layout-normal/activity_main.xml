@@ -338,18 +338,19 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
         android:text=" Your steps: 0"
+        android:textAlignment="center"
         android:textColor="@android:color/background_dark"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/imgView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgbtRefresh"
-        app:layout_constraintVertical_bias="0.052"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imgbtAuto"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintVertical_bias="0.043" />
 
 
 </android.support.constraint.ConstraintLayout>

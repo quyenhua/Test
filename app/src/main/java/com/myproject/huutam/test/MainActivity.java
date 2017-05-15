@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         splitImage();
         embroilGame(50*level);
         stateGameAutos = findListState();
-        tvStep.setText("Your step: 0/" + stateGameAutos.size());
         setEvent();
+        tvStep.setText("Your step: 0/" + (stateGameAutos.size() - 1));
     }
 
     private ArrayList<StateGameAuto> findListState() {
@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
 
+        saveStartState = startState;
+
         startGame = new StateGameAuto(startState, position);
         stateGameList.add(startGame);
         GamePlayAuto autoPlayVar = new GamePlayAuto(imgSplitList, goalState, stateGameList);
@@ -175,21 +177,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 if(checkAutoPlaying == false){
-                    embroilGame(50 * level);
-                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    embroilGame(50*level);
+                    stateGameAutos.removeAll(stateGameAutos);
                     stateGameAutos = findListState();
                     count = 0;
-                    tvStep.setText("Your step: 0/" + stateGameAutos.size());
-//                    count = 0;
-//                    tvStep.setText("Your step: " + count + "/" + stateGameAutos.size());
-//                    for(int i = 0; i < 4; i++){
-//                        for(int j = 1; j < 4; j++){
-//                            imgSplitList[i][j].currentValue = saveStartState[i][j];
-//                        }
-//                    }
-//                    imgSplitList[3][0].currentValue = saveStartState[3][0];
-//                    splitImage();
-//                     đổi lại start game
+                    tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 }
             }
         });
@@ -199,8 +191,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             public void onClick(View view) {
                 if(checkAutoPlaying == false) {
                     checkAutoPlaying = true;
-                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    stateGameAutos.removeAll(stateGameAutos);
                     stateGameAutos = findListState();
+                    count = 0;
+                    tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                     autoPlay(stateGameAutos);
                 }
             }
@@ -209,52 +203,55 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         imgBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                alertDialog.setTitle("Quit Game");
-                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
-                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-//                        Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
-//                        finish();
-//                        startActivity(intentHome);
-                        finish();
-                    }});
-                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                if(checkAutoPlaying == false){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                    alertDialog.setTitle("Quit Game");
+                    alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
+                            finish();
+                            startActivity(intentHome);
+                        }});
+                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         });
 
         imgBackOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                alertDialog.setTitle("Quit Game");
-                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
-                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Intent intentReturn = new Intent(MainActivity.this, OpenImage.class);
-                        intentReturn.putExtra("level", level);
-                        finish();
-                        startActivity(intentReturn);
-                    }});
-                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                if(checkAutoPlaying == false){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                    alertDialog.setTitle("Quit Game");
+                    alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intentReturn = new Intent(MainActivity.this, OpenImage.class);
+                            intentReturn.putExtra("level", level);
+                            finish();
+                            startActivity(intentReturn);
+                        }});
+                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         });
     }
@@ -274,6 +271,11 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 embroilGame(50*level);
+                checkAutoPlaying = false;
+                stateGameAutos.removeAll(stateGameAutos);
+                stateGameAutos = findListState();
+                count = 0;
+                tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 dialog.cancel();
             }
         });
@@ -335,7 +337,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
             @Override
             public void onClick(View view) {
                 embroilGame(50*level);
-                count = 0;
+                stateGameAutos.removeAll(stateGameAutos);
+                stateGameAutos = findListState();
                 dialog.cancel();
             }
         });
@@ -429,65 +432,6 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this,"Error2:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void onClickImageSplit(View v) {
-        ImageView image = (ImageView) v;
-        int a = 0;
-        int b = 0;
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (imgSplitList[i][j + 1].imgViewSmall == image) {
-                    a = i;
-                    b = j + 1;
-                    i = 10;
-                    j = 10;
-                }
-            }
-        }
-
-        if (v == imgSplitList[3][0].imgViewSmall) {
-            if (imgSplitList[3][1].currentValue == 0) {
-                changeImage(imgSplitList[3][0], imgSplitList[3][1]);
-                count++;
-                tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
-            }
-        } else if (imgSplitList[a][b].currentValue != 0) {
-            if (b > 1 || (b == 1 && a == 3)) {
-                if (imgSplitList[a][b - 1].currentValue == 0) {
-                    changeImage(imgSplitList[a][b - 1], imgSplitList[a][b]);
-                    count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
-                }
-            }
-            if (b < 3) {
-                if (imgSplitList[a][b + 1].currentValue == 0) {
-                    changeImage(imgSplitList[a][b + 1], imgSplitList[a][b]);
-                    count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
-                }
-            }
-            if (a > 0) {
-                if (imgSplitList[a - 1][b].currentValue == 0) {
-                    changeImage(imgSplitList[a - 1][b], imgSplitList[a][b]);
-                    count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
-                }
-            }
-
-            if (a < 3) {
-                if (imgSplitList[a + 1][b].currentValue == 0) {
-                    changeImage(imgSplitList[a + 1][b], imgSplitList[a][b]);
-                    count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
-                }
-            }
-        }
-
-        if(checkGoal() == true){
-            complete();
         }
     }
 
@@ -621,6 +565,10 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                         imgSplitList[finalRightPath.get(count[0] +1).getPositionEmpty().getX()][finalRightPath.get(count[0] +1).getPositionEmpty().getY()]);
                                 soundPlayer.playMoveSound();
                                 count[0]++;
+                                tvStep.setText("Your steps: " + count[0] + "/" + (stateGameAutos.size() - 1));
+                                if(checkGoal() == true){
+                                    autoComlete();
+                                }
                             }
                         });
                     } catch (InterruptedException e) {
@@ -637,17 +585,20 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                                     changeImage(imgSplitList[finalRightPath.get(count[0]).getPositionEmpty().getX()][finalRightPath.get(count[0]).getPositionEmpty().getY()], imgSplitList[finalRightPath.get(count[0] + 1).getPositionEmpty().getX()][finalRightPath.get(count[0] + 1).getPositionEmpty().getY()]);
                                     soundPlayer.playMoveSound();
                                     count[0]++;
+                                    tvStep.setText("Your steps: " + count[0] + "/" + (stateGameAutos.size() - 1));
+                                    if(checkGoal() == true){
+                                        autoComlete();
+                                    }
                                 }
                             });
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
+
                 }
                 checkAutoPlaying = false;
-                if(checkGoal() == true){
-                    complete();
-                }
+
             }
         };
         thread.start();
@@ -710,7 +661,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if (imgSplitList[3][1].currentValue == 0) {
                     changeImage(imgSplitList[3][0], imgSplitList[3][1]);
                     count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                     return true;
                 }
             } else if (imgSplitList[a][b].currentValue != 0) {
@@ -718,7 +669,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if (imgSplitList[a][b - 1].currentValue == 0) {
                         changeImage(imgSplitList[a][b - 1], imgSplitList[a][b]);
                         count++;
-                        tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                         return true;
                     }
                 }
@@ -726,7 +677,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if (imgSplitList[a][b + 1].currentValue == 0) {
                         changeImage(imgSplitList[a][b + 1], imgSplitList[a][b]);
                         count++;
-                        tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                         return true;
                     }
                 }
@@ -734,7 +685,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if (imgSplitList[a - 1][b].currentValue == 0) {
                         changeImage(imgSplitList[a - 1][b], imgSplitList[a][b]);
                         count++;
-                        tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                         return true;
                     }
                 }
@@ -743,7 +694,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     if (imgSplitList[a + 1][b].currentValue == 0) {
                         changeImage(imgSplitList[a + 1][b], imgSplitList[a][b]);
                         count++;
-                        tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                         return true;
                     }
                 }
@@ -811,7 +762,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if(imgSplitList[a-1][b].currentValue == 0){
                     changeImage(imgSplitList[a][b], imgSplitList[a-1][b]);
                     count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                 }
         }
 
@@ -820,7 +771,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if(imgSplitList[a+1][b].currentValue == 0){
                     changeImage(imgSplitList[a][b], imgSplitList[a+1][b]);
                     count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                 }
         }
 
@@ -829,7 +780,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if(imgSplitList[a][b-1].currentValue == 0) {
                     changeImage(imgSplitList[a][b], imgSplitList[a][b - 1]);
                     count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                 }
 
         }
@@ -839,7 +790,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 if(imgSplitList[a][b+1].currentValue == 0) {
                     changeImage(imgSplitList[a][b], imgSplitList[a][b + 1]);
                     count++;
-                    tvStep.setText("Your steps: " + count + "/" + stateGameAutos.size());
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
                 }
         }
     }
