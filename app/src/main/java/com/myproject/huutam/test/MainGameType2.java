@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,6 +25,7 @@ import com.myproject.huutam.test.dom.XMLDOMParser;
 import com.myproject.huutam.test.item.ImageSplit;
 import com.myproject.huutam.test.item.MissionItem;
 import com.myproject.huutam.test.item.Position;
+import com.myproject.huutam.test.item.SoundPlayer;
 import com.myproject.huutam.test.item.StateGameAuto;
 
 import org.w3c.dom.Document;
@@ -38,13 +41,16 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MainGameType2 extends AppCompatActivity {
+public class MainGameType2 extends AppCompatActivity implements View.OnTouchListener {
     //RelativeLayout screen;
     ImageView imgView;
     ImageButton imgbtRefresh;
     ImageButton imgbtAutoPlay;
     ImageButton imgBackOpen, imgBackHome;
     Bitmap gameImage;
+    ImageView touchedImage;
+    GestureDetector gestureDetector;
+    SoundPlayer soundPlayer;
     Bitmap bitmapList[][] = new Bitmap[5][5];
     ImageSplit imgSplitList[][] = new ImageSplit[5][5];
     boolean checkAutoPlaying = false;
@@ -61,6 +67,8 @@ public class MainGameType2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_game_type2);
         //screen = (RelativeLayout) findViewById(R.id.manhinh);
+        soundPlayer = new SoundPlayer(this);
+        gestureDetector = new GestureDetector(this, new GestureListener());
         imgView = (ImageView) findViewById(R.id.imgViewPrevious_45);
         //screen.setBackgroundResource(R.drawable.screen);
         imgbtRefresh = (ImageButton) findViewById(R.id.imgbtRefresh_45);
@@ -124,26 +132,28 @@ public class MainGameType2 extends AppCompatActivity {
                 k++;
                 imgSplitList[i][j].currentValue = k;
                 imgSplitList[i][j].realValue = k;
+                imgSplitList[i][j].imgViewSmall.setOnTouchListener(this);
             }
         }
         imgSplitList[4][0].currentValue = 0;
         imgSplitList[4][0].realValue = 0;
+        imgSplitList[4][0].imgViewSmall.setOnTouchListener(this);
 
         splitImage();
 
         embroilGame(50*level);
         stateGameAutos = findListState();
-        tvStep.setText("Your step: 0/" + stateGameAutos.size());
+        tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
 
         imgbtRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(checkAutoPlaying == false){
                     embroilGame(50 * level);
-                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    stateGameAutos.removeAll(stateGameAutos);
                     stateGameAutos = findListState();
                     count = 0;
-                    tvStep.setText("Your step: 0/" + stateGameAutos.size());
+                    tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 }
             }
         });
@@ -153,8 +163,10 @@ public class MainGameType2 extends AppCompatActivity {
             public void onClick(View view) {
                 if(checkAutoPlaying == false) {
                     checkAutoPlaying = true;
-                    stateGameAutos = new ArrayList<StateGameAuto>();
+                    stateGameAutos.removeAll(stateGameAutos);
                     stateGameAutos = findListState();
+                    count = 0;
+                    tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                     autoPlay(stateGameAutos);
                 }
 
@@ -164,52 +176,56 @@ public class MainGameType2 extends AppCompatActivity {
         imgBackHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainGameType2.this);
-                alertDialog.setTitle("Quit Game");
-                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
-                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                if(checkAutoPlaying == false){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainGameType2.this);
+                    alertDialog.setTitle("Quit Game");
+                    alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
 //                        Intent intentHome = new Intent(MainActivity.this, MenuActivity.class);
 //                        finish();
 //                        startActivity(intentHome);
-                        finish();
-                    }});
-                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                            finish();
+                        }});
+                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         });
 
         imgBackOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainGameType2.this);
-                alertDialog.setTitle("Quit Game");
-                alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
-                alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Intent intentReturn = new Intent(MainGameType2.this, OpenImage.class);
-                        intentReturn.putExtra("level", level);
-                        finish();
-                        startActivity(intentReturn);
-                    }});
-                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
+                if(checkAutoPlaying == false){
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainGameType2.this);
+                    alertDialog.setTitle("Quit Game");
+                    alertDialog.setMessage("This mission aren't saved. Are you sure you want to quit game?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface. OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intentReturn = new Intent(MainGameType2.this, OpenImage.class);
+                            intentReturn.putExtra("level", level);
+                            finish();
+                            startActivity(intentReturn);
+                        }});
+                    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                }
             }
         });
     }
@@ -261,6 +277,8 @@ public class MainGameType2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 embroilGame(50*level);
+                count = 0;
+                tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 dialog.cancel();
             }
         });
@@ -323,7 +341,10 @@ public class MainGameType2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 embroilGame(50*level);
+                stateGameAutos.removeAll(stateGameAutos);
+                stateGameAutos = findListState();
                 count = 0;
+                tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 dialog.cancel();
             }
         });
@@ -418,53 +439,6 @@ public class MainGameType2 extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(this,"Error2:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void onClickImageSplit(View v) {
-        ImageView image = (ImageView) v;
-        int a = 0;
-        int b = 0;
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 1; j < 5; j++) {
-                if (imgSplitList[i][j].imgViewSmall == image) {
-                    a = i;
-                    b = j;
-                    i = 5;
-                    j = 5;
-                }
-            }
-        }
-
-        if (v == imgSplitList[4][0].imgViewSmall) {
-            if (imgSplitList[4][1].currentValue == 0) {
-                changeImage(imgSplitList[4][0], imgSplitList[4][1]);
-            }
-        } else if (imgSplitList[a][b].currentValue != 0) {
-            if (b > 1 || (b == 1 && a == 4)) {
-                if (imgSplitList[a][b - 1].currentValue == 0) {
-                    changeImage(imgSplitList[a][b - 1], imgSplitList[a][b]);
-                }
-            }
-            if (b < 4) {
-                if (imgSplitList[a][b + 1].currentValue == 0) {
-                    changeImage(imgSplitList[a][b + 1], imgSplitList[a][b]);
-                }
-            }
-            if (a > 0) {
-                if (imgSplitList[a - 1][b].currentValue == 0) {
-                    changeImage(imgSplitList[a - 1][b], imgSplitList[a][b]);
-                }
-            }
-
-            if (a < 4) {
-                if (imgSplitList[a + 1][b].currentValue == 0) {
-                    changeImage(imgSplitList[a + 1][b], imgSplitList[a][b]);
-                }
-            }
-
-        }
-
     }
 
     private void changeImage(ImageSplit a, ImageSplit b) {
@@ -578,13 +552,17 @@ public class MainGameType2 extends AppCompatActivity {
                 final int[] count = {0};
                 if(finalRightPath.size()-2==0){
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(50);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 changeImage(imgSplitList[finalRightPath.get(count[0]).getPositionEmpty().getX()][finalRightPath.get(count[0]).getPositionEmpty().getY()],
                                         imgSplitList[finalRightPath.get(count[0] +1).getPositionEmpty().getX()][finalRightPath.get(count[0] +1).getPositionEmpty().getY()]);
                                 count[0]++;
+                                tvStep.setText("Your step: " + count[0] + "/" + (stateGameAutos.size() - 1));
+                                if(checkGoal() == true){
+                                    autoComlete();
+                                }
                             }
                         });
                     } catch (InterruptedException e) {
@@ -594,12 +572,16 @@ public class MainGameType2 extends AppCompatActivity {
                 else {
                     while (count[0] < (finalRightPath.size() - 2)) {
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(50);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     changeImage(imgSplitList[finalRightPath.get(count[0]).getPositionEmpty().getX()][finalRightPath.get(count[0]).getPositionEmpty().getY()], imgSplitList[finalRightPath.get(count[0] + 1).getPositionEmpty().getX()][finalRightPath.get(count[0] + 1).getPositionEmpty().getY()]);
                                     count[0]++;
+                                    tvStep.setText("Your step: " + count[0] + "/" + (stateGameAutos.size() - 1));
+                                    if(checkGoal() == true){
+                                        autoComlete();
+                                    }
                                 }
                             });
                         } catch (InterruptedException e) {
@@ -614,14 +596,205 @@ public class MainGameType2 extends AppCompatActivity {
     }
 
     private boolean checkGoal() {
-        for(int i = 0; i < 4; i++){
-            for (int j = 0; j < 3; j++){
+        for(int i = 0; i < 5; i++){
+            for (int j = 0; j < 4; j++){
                 if(imgSplitList[i][j + 1].currentValue != imgSplitList[i][j + 1].realValue){
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        touchedImage = (ImageView) v;
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_THRESHOLD = 15;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 50;
+
+        private int a = 0;
+        private int b = 0;
+
+        private boolean checkTouchedImage(){
+            if(imgSplitList[4][0].imgViewSmall == touchedImage){
+                a = 4; b = 0;
+                return true;
+            }
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (imgSplitList[i][j + 1].imgViewSmall == touchedImage) {
+                        a = i;
+                        b = j + 1;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean checkMoveLeft(){
+            if(a == 4 && b == 0) return false;
+            else if(a != 4 && b == 1) return false;
+            return true;
+        }
+
+        private boolean checkMoveRight(){
+            if(b == 4) return false;
+            return true;
+        }
+
+        private boolean checkMoveTop(){
+            if(a == 4 && b == 0) return false;
+            else if(a == 0) return false;
+            return true;
+        }
+
+        private boolean checkMoveBottom(){
+            if(a == 4) return false;
+            return true;
+        }
+
+        private boolean onClickImageSplit() {
+            if (touchedImage == imgSplitList[4][0].imgViewSmall) {
+                if (imgSplitList[4][1].currentValue == 0) {
+                    changeImage(imgSplitList[4][0], imgSplitList[4][1]);
+                    count++;
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                    return true;
+                }
+            } else if (imgSplitList[a][b].currentValue != 0) {
+                if (b > 1 || (b == 1 && a == 4)) {
+                    if (imgSplitList[a][b - 1].currentValue == 0) {
+                        changeImage(imgSplitList[a][b - 1], imgSplitList[a][b]);
+                        count++;
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                        return true;
+                    }
+                }
+                if (b < 4) {
+                    if (imgSplitList[a][b + 1].currentValue == 0) {
+                        changeImage(imgSplitList[a][b + 1], imgSplitList[a][b]);
+                        count++;
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                        return true;
+                    }
+                }
+                if (a > 0) {
+                    if (imgSplitList[a - 1][b].currentValue == 0) {
+                        changeImage(imgSplitList[a - 1][b], imgSplitList[a][b]);
+                        count++;
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                        return true;
+                    }
+                }
+
+                if (a < 4) {
+                    if (imgSplitList[a + 1][b].currentValue == 0) {
+                        changeImage(imgSplitList[a + 1][b], imgSplitList[a][b]);
+                        count++;
+                        tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            soundPlayer.playMoveSound();
+            Boolean result =  onClickImageSplit();
+            if(checkGoal() == true){
+                complete();
+            }
+            return result;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return checkTouchedImage();        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+
+            float diffX = e2.getX() - e1.getX();
+            float diffY = e2.getY() - e1.getY();
+
+
+
+            if(Math.abs(diffX) > Math.abs(diffY)){
+                if(Math.abs(diffX)  > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD){
+                    if(diffX > 0){
+                        onSwipeRight();
+                    }
+                    else{
+                        onSwipeLeft();
+                    }
+                    result = true;
+                }
+                if(checkGoal() == true){
+                    complete();
+                }
+            }
+            else{
+                if(Math.abs(diffY)  > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD){
+                    if(diffY > 0){
+                        onSwipeBottom();
+                    }
+                    else{
+                        onSwipeTop();
+                    }
+                    result = true;
+                }
+                if(checkGoal() == true){
+                    complete();
+                }
+            }
+            return result;
+        }
+
+        private void onSwipeTop() {
+            if(checkMoveTop())
+                if(imgSplitList[a-1][b].currentValue == 0){
+                    changeImage(imgSplitList[a][b], imgSplitList[a-1][b]);
+                    count++;
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                }
+        }
+
+        private void onSwipeBottom() {
+            if(checkMoveBottom())
+                if(imgSplitList[a+1][b].currentValue == 0){
+                    changeImage(imgSplitList[a][b], imgSplitList[a+1][b]);
+                    count++;
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                }
+        }
+
+        private void onSwipeLeft() {
+            if(checkMoveLeft())
+                if(imgSplitList[a][b-1].currentValue == 0) {
+                    changeImage(imgSplitList[a][b], imgSplitList[a][b - 1]);
+                    count++;
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                }
+
+        }
+
+        private void onSwipeRight() {
+            if(checkMoveRight())
+                if(imgSplitList[a][b+1].currentValue == 0) {
+                    changeImage(imgSplitList[a][b], imgSplitList[a][b + 1]);
+                    count++;
+                    tvStep.setText("Your steps: " + count + "/" + (stateGameAutos.size() - 1));
+                }
+        }
     }
 }
 

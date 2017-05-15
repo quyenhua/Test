@@ -339,6 +339,8 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                 embroilGame(50*level);
                 stateGameAutos.removeAll(stateGameAutos);
                 stateGameAutos = findListState();
+                count = 0;
+                tvStep.setText("Your step: " + count + "/" + (stateGameAutos.size() - 1));
                 dialog.cancel();
             }
         });
