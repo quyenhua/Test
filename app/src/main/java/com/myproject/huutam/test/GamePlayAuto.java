@@ -179,7 +179,7 @@ public class GamePlayAuto {
             }
         }
         // Move to right
-        if (currentState.getPositionEmpty().getY() < 3) {
+        if (currentState.getPositionEmpty().getY() < numOfCol-1) {
             boolean checkMove = true;
             for (int i=0;i<positionDisableList.size();i++){
                 if(positionDisableList.get(i).getX() == currentState.getPositionEmpty().getX() && positionDisableList.get(i).getY() == currentState.getPositionEmpty().getY()+1){
@@ -192,7 +192,7 @@ public class GamePlayAuto {
                 direction.add(new Position(2, distance));
             }
         }
-        if (currentState.getPositionEmpty().getX() < 3) {
+        if (currentState.getPositionEmpty().getX() < numOfRow-1) {
             boolean checkMove = true;
             for (int i=0;i<positionDisableList.size();i++){
                 if(positionDisableList.get(i).getX() == currentState.getPositionEmpty().getX()+1 && positionDisableList.get(i).getY() == currentState.getPositionEmpty().getY()){
@@ -245,12 +245,20 @@ public class GamePlayAuto {
                 if(mainPosition.getX() == currentState.getPositionEmpty().getX() - 1 && mainPosition.getY() == currentState.getPositionEmpty().getY() - 1){
                     distance +=1;
                 }
+                if(mainPosition.getY() == targetPosition.getY()-1 && mainPosition.getX() == targetPosition.getX()){
+                    distance +=1;
+                }
                 direction.add(new Position(0, distance));
             }
         }
         // Move to top
-        if (currentState.getPositionEmpty().getX() > positionSet.getX() && ((currentState.getPositionEmpty().getX() - 1) != mainPosition.getX() || currentState.getPositionEmpty().getY() != mainPosition.getY())) {
-
+        int rowNow = positionSet.getX();
+        for (int i = 0; i<positionDisableList.size();i++){
+            if(positionDisableList.get(i).getX() < rowNow){
+                rowNow = positionDisableList.get(i).getX();
+            }
+        }
+        if (currentState.getPositionEmpty().getX() > rowNow && ((currentState.getPositionEmpty().getX() - 1) != mainPosition.getX() || currentState.getPositionEmpty().getY() != mainPosition.getY())) {
             boolean checkMove = true;
             for (int i=0;i<positionDisableList.size();i++){
                 if(positionDisableList.get(i).getX() == currentState.getPositionEmpty().getX()-1 && positionDisableList.get(i).getY() == currentState.getPositionEmpty().getY()){
@@ -267,16 +275,29 @@ public class GamePlayAuto {
             }
             if(checkMove==true) {
                 distance = Math.abs(currentState.getPositionEmpty().getX() - 1 - targetPosition.getX()) + Math.abs(currentState.getPositionEmpty().getY() - targetPosition.getY());
+                if(mainPosition.getX() == currentState.getPositionEmpty().getX() - 1 && mainPosition.getY() == currentState.getPositionEmpty().getY() + 1){
+                    distance +=1;
+                }
+                if(mainPosition.getY() == targetPosition.getY()-1 && mainPosition.getX() == targetPosition.getX()){
+                    distance +=2;
+                }
                 direction.add(new Position(1, distance));
             }
         }
         // Move to right
-        if (currentState.getPositionEmpty().getY() < 3 && (mainPosition.getX() != currentState.getPositionEmpty().getX() || mainPosition.getY() != (currentState.getPositionEmpty().getY() + 1))) {
+        if (currentState.getPositionEmpty().getY() < numOfCol-1 && (mainPosition.getX() != currentState.getPositionEmpty().getX() || mainPosition.getY() != (currentState.getPositionEmpty().getY() + 1))) {
             boolean checkMove = true;
             for (int i=0;i<positionDisableList.size();i++){
                 if(positionDisableList.get(i).getX() == currentState.getPositionEmpty().getX() && positionDisableList.get(i).getY() == currentState.getPositionEmpty().getY()+1){
                     checkMove=false;
                     break;
+                }
+                else if(positionDisableList.get(i).getY() == mainPosition.getY() + 1 && positionDisableList.get(i).getX() == mainPosition.getX()-1){
+                    if(currentState.getPositionEmpty().getX() == mainPosition.getX()- 1 &&
+                            currentState.getPositionEmpty().getY() == mainPosition.getY() - 1){
+                        checkMove=false;
+                        break;
+                    }
                 }
             }
             if(checkMove==true) {
@@ -284,7 +305,7 @@ public class GamePlayAuto {
                 direction.add(new Position(2, distance));
             }
         }
-        if (currentState.getPositionEmpty().getX() < 3 && (currentState.getPositionEmpty().getX() + 1 != mainPosition.getX() || currentState.getPositionEmpty().getY() != mainPosition.getY())) {
+        if (currentState.getPositionEmpty().getX() < numOfRow-1 && (currentState.getPositionEmpty().getX() + 1 != mainPosition.getX() || currentState.getPositionEmpty().getY() != mainPosition.getY())) {
             boolean checkMove = true;
             for (int i=0;i<positionDisableList.size();i++){
                 if(positionDisableList.get(i).getX() == currentState.getPositionEmpty().getX()+1 && positionDisableList.get(i).getY() == currentState.getPositionEmpty().getY()){
@@ -422,13 +443,22 @@ public class GamePlayAuto {
         StateGameAuto currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
                 stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
         Position nowPositionMainPoint = new Position(0,0);
-        for (int i = positionRealSplit.getX(); i < this.numOfRow; i++) {
+        int rowNow = positionRealSplit.getX();
+        for (int i = 0; i<positionDisableList.size();i++){
+            if(positionDisableList.get(i).getX() < rowNow){
+                rowNow = positionDisableList.get(i).getX();
+            }
+        }
+        for (int i = rowNow; i < this.numOfRow; i++) {
             for (int j = 1; j < this.numOfCol; j++) {
                 if (currentState.getState()[i][j] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
                     nowPositionMainPoint.setX(i);
                     nowPositionMainPoint.setY(j);
                 }
             }
+        }
+        if(nowPositionMainPoint.getX() < targetPosition.getX()){
+            stateGameAutoArrayList = MoveToFinishBottom(stateGameAutoArrayList,positionDisableList,positionRealSplit,targetPosition);
         }
         while (nowPositionMainPoint.getX() > targetPosition.getX()) {
             int moveTopPosition = nowPositionMainPoint.getX() - 1;
@@ -438,7 +468,7 @@ public class GamePlayAuto {
                     stateGameAutoArrayList=MoveToFinishRight(stateGameAutoArrayList,positionDisableList,positionRealSplit,targetPosition);
                     currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
                             stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
-                    for (int k = positionRealSplit.getX(); k < this.numOfRow; k++) {
+                    for (int k = rowNow; k < this.numOfRow; k++) {
                         for (int t = 1; t < this.numOfCol; t++) {
                             if (currentState.getState()[k][t] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
                                 nowPositionMainPoint.setX(k);
@@ -472,7 +502,13 @@ public class GamePlayAuto {
         StateGameAuto currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
                 stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
         Position nowPositionMainPoint = new Position(0,0);
-        for (int i = positionRealSplit.getX(); i < this.numOfRow; i++) {
+        int rowNow = positionRealSplit.getX();
+        for (int i = 0; i<positionDisableList.size();i++){
+            if(positionDisableList.get(i).getX() < rowNow){
+                rowNow = positionDisableList.get(i).getX();
+            }
+        }
+        for (int i = rowNow; i < this.numOfRow; i++) {
             for (int j = 1; j < this.numOfCol; j++) {
                 if (currentState.getState()[i][j] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
                     nowPositionMainPoint.setX(i);
@@ -507,7 +543,13 @@ public class GamePlayAuto {
         StateGameAuto currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
                 stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
         Position nowPositionMainPoint = new Position(0,0);
-        for (int i = positionRealSplit.getX(); i < this.numOfRow; i++) {
+        int rowNow = positionRealSplit.getX();
+        for (int i = 0; i<positionDisableList.size();i++){
+            if(positionDisableList.get(i).getX() < rowNow){
+                rowNow = positionDisableList.get(i).getX();
+            }
+        }
+        for (int i = rowNow; i < this.numOfRow; i++) {
             for (int j = 1; j < this.numOfCol; j++) {
                 if (currentState.getState()[i][j] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
                     nowPositionMainPoint.setX(i);
@@ -539,7 +581,13 @@ public class GamePlayAuto {
         StateGameAuto currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
                 stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
         Position nowPositionMainPoint = new Position(0,0);
-        for (int i = positionRealSplit.getX(); i < this.numOfRow; i++) {
+        int rowNow = positionRealSplit.getX();
+        for (int i = 0; i<positionDisableList.size();i++){
+            if(positionDisableList.get(i).getX() < rowNow){
+                rowNow = positionDisableList.get(i).getX();
+            }
+        }
+        for (int i = rowNow; i < this.numOfRow; i++) {
             for (int j = 1; j < this.numOfCol; j++) {
                 if (currentState.getState()[i][j] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
                     nowPositionMainPoint.setX(i);
@@ -550,6 +598,24 @@ public class GamePlayAuto {
         while (nowPositionMainPoint.getY() < targetPosition.getY()) {
             int moveRightPosition = nowPositionMainPoint.getY() + 1;
             Position positionMoveNext = new Position(nowPositionMainPoint.getX(),moveRightPosition);
+            for(int i=0;i<positionDisableList.size();i++){
+                if(positionMoveNext.getX() == positionDisableList.get(i).getX() && positionMoveNext.getY() == positionDisableList.get(i).getY()){
+                    stateGameAutoArrayList=MoveToFinishBottom(stateGameAutoArrayList,positionDisableList,positionRealSplit,targetPosition);
+                    currentState = new StateGameAuto(stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getState(),
+                            stateGameAutoArrayList.get(stateGameAutoArrayList.size() - 1).getPositionEmpty());
+                    for (int k = rowNow; k < this.numOfRow; k++) {
+                        for (int t = 1; t < this.numOfCol; t++) {
+                            if (currentState.getState()[k][t] == imageSplitsGame[positionRealSplit.getX()][positionRealSplit.getY()].realValue) {
+                                nowPositionMainPoint.setX(k);
+                                nowPositionMainPoint.setY(t);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+            moveRightPosition = nowPositionMainPoint.getY() + 1;
+            positionMoveNext = new Position(nowPositionMainPoint.getX(),moveRightPosition);
             stateGameAutoArrayList = MoveEmptyPointToTargetNormal(stateGameAutoArrayList,positionMoveNext,nowPositionMainPoint,positionRealSplit,positionDisableList);
             stateGameAutoArrayList = MoveImageSplitOneStep(stateGameAutoArrayList,nowPositionMainPoint);
             nowPositionMainPoint.setY(moveRightPosition);
@@ -585,6 +651,11 @@ public class GamePlayAuto {
         boolean checkEmbroid = false;
         ArrayList<Position> positionDisableLists = new ArrayList<>();
         int n = 0;
+        while (this.numOfCol > 4) {
+            this.stateGameList = stateGameListRepair(this.stateGameList);
+            this.numOfCol -= 1;
+        }
+
         for(int m=0;m < this.numOfRow -1;m++){
             boolean checkSort = false;
             positionDisableLists = new ArrayList<>();
@@ -613,7 +684,7 @@ public class GamePlayAuto {
                     n=2;
                 }
                 else {
-                    if(positionSet.getY() == 2 && m==2){
+                    if(positionSet.getY() == 2 && m==numOfRow-2){
                         if((this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY() - 1] ==
                                 imageSplitsGame[positionSet.getX()][positionSet.getY()].realValue) ||
                                 (this.stateGameList.get(this.stateGameList.size()-1).getState()[positionSet.getX() + 1][positionSet.getY()] ==
@@ -705,5 +776,115 @@ public class GamePlayAuto {
         }
         this.stateGameList = SortEndRow(this.stateGameList);
         return this.stateGameList;
+    }
+
+    private ArrayList<StateGameAuto> stateGameListRepair(ArrayList<StateGameAuto> stateGameAutoArrayList){
+        Position positionSet = new Position(0, numOfCol - 1);
+        Position nowSplitSetPosition = new Position(0, 0);
+        boolean checkEmbroid = false;
+        ArrayList<Position> positionDisableLists = new ArrayList<>();
+        int n = 0;
+        boolean checkColSort = false;
+        for (int i=0;i<1;i++){
+            while (n<numOfRow - 1){
+                if(positionDisableLists.size()==2){
+                    if(stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[this.numOfRow -3][positionSet.getY()-1] == imageSplitsGame[this.numOfRow -3][positionSet.getY()].realValue
+                            && this.stateGameList.get(this.stateGameList.size()-1).getState()[this.numOfRow -3][positionSet.getY()] == imageSplitsGame[this.numOfRow -2][positionSet.getY()].realValue) {
+                        positionDisableLists.add(new Position(this.numOfRow - 3, positionSet.getY() - 1));
+                        positionDisableLists.add(new Position(this.numOfRow - 3, positionSet.getY()));
+                        positionSet.setX(positionSet.getX() + 2);
+                        n = numOfRow - 1;
+                        checkColSort = true;
+                    }
+
+                    else if(stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[this.numOfRow -3][positionSet.getY()-1] == imageSplitsGame[this.numOfRow -3][positionSet.getY()].realValue
+                            && stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[this.numOfRow -2][positionSet.getY()] == imageSplitsGame[this.numOfRow -2][positionSet.getY()].realValue
+                            && stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[this.numOfRow -3][positionSet.getY()] == 0) {
+                        positionDisableLists.add(new Position(this.numOfRow - 3, positionSet.getY() - 1));
+                        stateGameAutoArrayList = MoveImageSplitOneStep(stateGameAutoArrayList,new Position(numOfRow-2,positionSet.getY()));
+                        positionDisableLists.add(new Position(this.numOfRow - 3, positionSet.getY()));
+                        positionSet.setX(positionSet.getX() + 2);
+                        n = numOfRow - 1;
+                        checkColSort = true;
+                    }
+                    else{
+                        stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                                positionDisableLists,positionSet,positionSet);
+                        positionDisableLists.add(new Position(positionSet.getX(),positionSet.getY()));
+                    }
+                }
+                else {
+                    stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                        positionDisableLists,positionSet,positionSet);
+                    positionDisableLists.add(new Position(positionSet.getX(),positionSet.getY()));
+                }
+
+                positionSet.setX(positionSet.getX() + 1);
+                n++;
+            }
+            positionSet = new Position(numOfRow-1,numOfCol-1);
+
+            if(CheckColGoal(stateGameAutoArrayList) == false){
+                if(checkColSort == false && (stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[numOfRow-1][numOfCol-2] != imageSplitsGame[numOfRow-1][numOfCol-1].realValue
+                        || stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[numOfRow-1][numOfCol-1] != 0)){
+                    stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,new Position(positionSet.getX(),positionSet.getY()-1)),
+                            positionDisableLists,positionSet,new Position(positionSet.getX(),positionSet.getY()-1));
+                    stateGameAutoArrayList = MoveEmptyPointToTargetSpecial(stateGameAutoArrayList,new Position(positionSet.getX()-2,positionSet.getY()-1),positionDisableLists);
+                    positionDisableLists.set(positionDisableLists.size()-2,new Position(0,0));
+                    positionDisableLists.set(positionDisableLists.size()-1,new Position(0,0));
+                    stateGameAutoArrayList = MoveImageSplitOneStep(stateGameAutoArrayList,new Position(numOfRow-3,numOfCol-1));
+                    stateGameAutoArrayList = MoveImageSplitOneStep(stateGameAutoArrayList,new Position(numOfRow-2,numOfCol-1));
+                    positionDisableLists.set(positionDisableLists.size()-2,new Position(numOfRow-3,numOfCol-2));
+                    positionDisableLists.set(positionDisableLists.size()-1,new Position(numOfRow-3,numOfCol-1));
+                    stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                            positionDisableLists,positionSet,positionSet);
+                    positionSet.setX(positionSet.getX()-2);
+                    positionDisableLists.set(positionDisableLists.size()-2,new Position(0,0));
+                    positionDisableLists.set(positionDisableLists.size()-1,new Position(0,0));
+                    stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                            positionDisableLists,positionSet,positionSet);
+                }
+                else if(checkColSort == false && stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[numOfRow-1][numOfCol-2] == imageSplitsGame[numOfRow-1][numOfCol-1].realValue
+                        && stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[numOfRow-1][numOfCol-1] == 0){
+                    stateGameAutoArrayList = MoveImageSplitOneStep(stateGameAutoArrayList,new Position(numOfRow-1,numOfCol-2));
+                }
+                else if(checkColSort == true){
+                    Position now = new Position(0,0);
+                    for (int a = 0;a<numOfRow;a++){
+                        for (int b=1;b<numOfCol;b++){
+                            if (imageSplitsGame[numOfRow-1][numOfCol-1].realValue == stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[a][b]){
+                                now = new Position(a,b);
+                                a= 5;
+                                b=5;
+                            }
+
+                        }
+                    }
+                    if(now.getY()>numOfCol-3){
+                        stateGameAutoArrayList = MoveToFinishLeft(stateGameAutoArrayList,positionDisableLists,positionSet,new Position(now.getX(),numOfCol-3));
+                    }
+                    stateGameAutoArrayList = MoveToFinishRight(MoveToFinishBottom(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                            positionDisableLists,positionSet,positionSet);
+                    positionSet.setX(positionSet.getX()-2);
+                    positionDisableLists.set(positionDisableLists.size()-2,new Position(0,0));
+                    positionDisableLists.set(positionDisableLists.size()-1,new Position(0,0));
+                    stateGameAutoArrayList = MoveToFinishTop(MoveToFinishRight(stateGameAutoArrayList,positionDisableLists,positionSet,positionSet),
+                            positionDisableLists,positionSet,positionSet);
+                }
+            }
+
+        }
+        return stateGameAutoArrayList;
+    }
+
+    private boolean CheckColGoal(ArrayList<StateGameAuto> stateGameAutoArrayList){
+        boolean check = true;
+        for(int i=0;i<this.numOfRow;i++){
+            if(stateGameAutoArrayList.get(stateGameAutoArrayList.size()-1).getState()[i][this.numOfCol-1] != imageSplitsGame[i][this.numOfCol-1].realValue){
+                check=false;
+                break;
+            }
+        }
+        return check;
     }
 }
