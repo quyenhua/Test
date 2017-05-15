@@ -79,9 +79,10 @@ public class MissionActivity extends AppCompatActivity {
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentMenu = new Intent(MissionActivity.this, MenuActivity.class);
+//                Intent intentMenu = new Intent(MissionActivity.this, MenuActivity.class);
+//                finish();
+//                startActivity(intentMenu);
                 finish();
-                startActivity(intentMenu);
             }
         });
     }

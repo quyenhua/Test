@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import java.io.File;
 public class MenuActivity extends Activity {
 
     private ImageButton imgNewGame, imgContinue, imgSetting, imgExit;
+    private MediaPlayer song;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,9 @@ public class MenuActivity extends Activity {
     }
 
     private void playMusic() {
-        MediaPlayer song = MediaPlayer.create(MenuActivity.this, R.raw.alittlelove);
+        song = MediaPlayer.create(MenuActivity.this, R.raw.alittlelove);
+        song.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        song.setAudioStreamType(AudioManager.STREAM_MUSIC);
         song.start();
     }
 
@@ -88,6 +93,7 @@ public class MenuActivity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        song.stop();
                         finish();
                     }});
                 alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
