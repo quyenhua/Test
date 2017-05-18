@@ -100,8 +100,9 @@ public class MissionActivity extends AppCompatActivity {
         else lock_bool = false;
         int star = Integer.parseInt(parser.getValue(element, "star"));
         int background = Integer.parseInt(parser.getValue(element, "background"));
+        int image = Integer.parseInt(parser.getValue(element,"image"));
 
-        MissionItem missionItem = new MissionItem(level, lock_bool, star, background);
+        MissionItem missionItem = new MissionItem(level, lock_bool, star, background, image);
 //        Toast.makeText(this, background, Toast.LENGTH_SHORT).show();
         arrayListShow.add(missionItem);
     }
@@ -146,13 +147,26 @@ public class MissionActivity extends AppCompatActivity {
     private void addList() {
 
         missionItemArrayList = new ArrayList<>();
-        for(int i = 0; i < 12; i++){
-            if(i == 0){
-                missionItemArrayList.add(new MissionItem(i + 1, true, R.drawable.nostar, R.drawable.mission));
-            }
-            else{
-                missionItemArrayList.add(new MissionItem(i + 1, false, R.drawable.nostarmissionno, R.drawable.mission_no));
-            }
-        }
+        missionItemArrayList.add(new MissionItem(1, true, R.drawable.nostar, R.drawable.mission, R.drawable.level1));
+        missionItemArrayList.add(new MissionItem(2, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level2));
+        missionItemArrayList.add(new MissionItem(3, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level3));
+        missionItemArrayList.add(new MissionItem(4, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level4));
+        missionItemArrayList.add(new MissionItem(5, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level5));
+        missionItemArrayList.add(new MissionItem(6, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level6));
+        missionItemArrayList.add(new MissionItem(7, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level7));
+        missionItemArrayList.add(new MissionItem(8, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level8));
+        missionItemArrayList.add(new MissionItem(9, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level9));
+        missionItemArrayList.add(new MissionItem(10, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level10));
+        missionItemArrayList.add(new MissionItem(11, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level11));
+        missionItemArrayList.add(new MissionItem(12, false, R.drawable.nostarmissionno, R.drawable.mission_no, R.drawable.level12));
+
+//        for(int i = 0; i < 12; i++){
+//            if(i == 0){
+//                missionItemArrayList.add(new MissionItem(i + 1, true, R.drawable.nostar, R.drawable.mission));
+//            }
+//            else{
+//                missionItemArrayList.add(new MissionItem(i + 1, false, R.drawable.nostarmissionno, R.drawable.mission_no));
+//            }
+//        }
     }
 }

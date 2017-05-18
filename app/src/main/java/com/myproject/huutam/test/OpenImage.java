@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,12 +14,23 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.myproject.huutam.test.dom.XMLDOMParser;
+import com.myproject.huutam.test.item.MissionItem;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,9 +44,12 @@ public class OpenImage extends AppCompatActivity {
     int level = 0;
     int FINISH_OPEN = 111;
 
+    XMLDOMParser parser = new XMLDOMParser();
+
     Bitmap bitmap;
 
     private String pictureImagePath = "";
+    String fileName = "level";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +62,8 @@ public class OpenImage extends AppCompatActivity {
             level = bundle.getInt("level");
         }
         tvShow.setText("Mission " + level);
-        bitmap= BitmapFactory.decodeResource(this.getResources(), R.drawable.tam);
+        MissionItem item = readLevels(fileName + level + ".xml");
+        bitmap= BitmapFactory.decodeResource(this.getResources(), item.getImage());
         imgShow.setImageBitmap(bitmap);
 
         setEvent();
@@ -158,5 +174,44 @@ public class OpenImage extends AppCompatActivity {
         imgStartGame = (ImageButton) findViewById(R.id.imgStartGame);
         imgOpen = (ImageButton) findViewById(R.id.imgOpenImage);
         imgTakePhoto = (ImageButton) findViewById(R.id.imgTakePhoto);
+    }
+
+    private MissionItem readLevels(String fileLevel) {
+        String currentLevel = readData(fileLevel);
+        Document doc = parser.getDocument(currentLevel);
+        NodeList node = doc.getElementsByTagName("level");
+        Element element = (Element) node.item(0);
+        int level = Integer.parseInt(element.getAttribute("id"));
+        String lock = parser.getValue(element, "lock");
+        Boolean lock_bool;
+        if(lock.equals("true"))
+            lock_bool = true;
+        else lock_bool = false;
+        int star = Integer.parseInt(parser.getValue(element, "star"));
+        int background = Integer.parseInt(parser.getValue(element, "background"));
+        int image = Integer.parseInt(parser.getValue(element, "image"));
+
+        return new MissionItem(level, lock_bool, star, background, image);
+    }
+
+    private String readData(String fileLevel) {
+        StringBuilder builder = new StringBuilder();
+        String content = "";
+        try {
+            FileInputStream input = this.openFileInput(fileLevel);
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(input));
+            while ((content = buffer.readLine()) != null){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    builder.append(content).append('\n');
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(this,"Error1:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this,"Error2:"+ e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        return builder.toString();
     }
 }

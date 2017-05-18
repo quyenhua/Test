@@ -332,19 +332,20 @@ public class MainGameType2 extends AppCompatActivity {
     private MissionItem completeLevel() {
         MissionItem missionItem;
         if(count - stateGameAutos.size() <= 5) {
-            missionItem = new MissionItem(level, true, R.drawable.threestar, R.drawable.mission, count);
+            missionItem = new MissionItem(level, true, R.drawable.threestar, R.drawable.mission, missionCurrent.getImage());
         }
         else if(count - stateGameAutos.size() <= 20){
-            missionItem = new MissionItem(level, true, R.drawable.twostar, R.drawable.mission, count);
+            missionItem = new MissionItem(level, true, R.drawable.twostar, R.drawable.mission, missionCurrent.getImage());
         }
         else{
-            missionItem = new MissionItem(level, true, R.drawable.onestar, R.drawable.mission, count);
+            missionItem = new MissionItem(level, true, R.drawable.onestar, R.drawable.mission, missionCurrent.getImage());
         }
         MissionItem itemReturn = missionItem;
         if(missionCurrent.getImageStar() == R.drawable.nostar) {
             String fileCurrentLevel = parser.writeUsingNormalOperation(missionItem);
             writeLevel(fileName + level + ".xml", fileCurrentLevel);
-            MissionItem nextMissionItem = new MissionItem(level + 1, true, R.drawable.nostar, R.drawable.mission);
+            MissionItem nextOldMission = readLevels(fileName + (level + 1)+ ".xml");
+            MissionItem nextMissionItem = new MissionItem(level + 1, true, R.drawable.nostar, R.drawable.mission, nextOldMission.getImage());
             String fileNextLevel = parser.writeUsingNormalOperation(nextMissionItem);
             writeLevel(fileName + (level + 1) + ".xml", fileNextLevel);
         }
@@ -352,12 +353,10 @@ public class MainGameType2 extends AppCompatActivity {
             if(missionCurrent.getImageStar() == R.drawable.twostar){
                 if(missionItem.getImageStar() == R.drawable.onestar){
                     missionItem.setImageStar(missionCurrent.getImageStar());
-                    missionItem.setBestStep(stateGameAutos.size());
                 }
             }
             else if(missionCurrent.getImageStar() == R.drawable.threestar){
                 missionItem.setImageStar(missionCurrent.getImageStar());
-                missionItem.setBestStep(stateGameAutos.size());
             }
             String fileCurrentLevel = parser.writeUsingNormalOperation(missionItem);
             writeLevel(fileName + level + ".xml", fileCurrentLevel);
@@ -378,9 +377,9 @@ public class MainGameType2 extends AppCompatActivity {
         else lock_bool = false;
         int star = Integer.parseInt(parser.getValue(element, "star"));
         int background = Integer.parseInt(parser.getValue(element, "background"));
-        int beststep = Integer.parseInt(parser.getValue(element, "beststep"));
+        int image = Integer.parseInt(parser.getValue(element, "image"));
 
-        return new MissionItem(level, lock_bool, star, background, beststep);
+        return new MissionItem(level, lock_bool, star, background, image);
     }
 
     private String readData(String fileLevel) {
